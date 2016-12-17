@@ -11,7 +11,7 @@ public class FiringPin extends Command {
 
     public FiringPin() {
     	requires(Robot.shooter);
-    	setTimeout(0.1);
+    	setTimeout(0.2);
     }
 
     protected void initialize() {

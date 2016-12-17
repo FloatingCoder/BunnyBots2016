@@ -38,17 +38,19 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-		oi = new OI();
+        shooter = new Shooter();
+
+    	oi = new OI();
         drivetrain = new DriveTrain();
 
         chooser = new SendableChooser();
         chooser.addDefault("Default Auto", new ExampleCommand());
 //        chooser.addObject("My Auto", new MyAutoCommand());
         SmartDashboard.putData("Auto mode", chooser);
-        CameraServer server = CameraServer.getInstance();
-        server.setQuality(50);
+        //CameraServer server = CameraServer.getInstance();
+        //server.setQuality(50);
         
-        server.startAutomaticCapture("cam0");
+        //server.startAutomaticCapture("cam0");
     }
 	
 	/**
@@ -102,7 +104,7 @@ public class Robot extends IterativeRobot {
             System.out.println("step1");
 
     		if(System.currentTimeMillis() < TargetTime){
-    			if (drivetrain.frontRangeFinder.getVoltage() > 0.7d){
+    			if (drivetrain.frontRangeFinder.getVoltage() > 0.3d){
     				drivetrain.drive.arcadeDrive(0, 0);
     			}
     			else{	

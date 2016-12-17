@@ -11,7 +11,7 @@ public class Shooter extends Subsystem {
     Talon Firingpin = new Talon(0);
    
     public void start() {
-    	FlywheelMotor.set(0.5f);
+    	FlywheelMotor.set(0.4f);
     }
     
     public void stop() {

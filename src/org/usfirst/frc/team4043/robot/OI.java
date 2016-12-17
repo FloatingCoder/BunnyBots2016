@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 import org.usfirst.frc.team4043.robot.commands.ExampleCommand;
 import org.usfirst.frc.team4043.robot.commands.FiringPin;
+import org.usfirst.frc.team4043.robot.commands.FlywheelStart;
+import org.usfirst.frc.team4043.robot.commands.FlywheelStop;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -41,10 +43,13 @@ public class OI {
     // button.whenReleased(new ExampleCommand());
 	
 	Joystick driveStick = new Joystick(0);
-	Button shootButton = new JoystickButton(driveStick, 5);
-			
+	Joystick shootStick = new Joystick(1);
+	Button shootButton = new JoystickButton(shootStick, 6);
+	Button FlywheelButton = new JoystickButton(shootStick, 5);
 	public OI() {
 		shootButton.whenPressed(new FiringPin());
+		FlywheelButton.whenPressed(new FlywheelStart());
+		FlywheelButton.whenReleased(new FlywheelStop());
 	}
 	  
     public Joystick getDriveStick() {

@@ -126,7 +126,7 @@ public class DriveTrain extends Subsystem {
 	
 	public void drive(Joystick joy) {
 		if (SmartDashboard.getBoolean("DB/Button 0", false)) {
-			drive.tankDrive(joy.getRawAxis(1), joy.getRawAxis(4));
+			drive.tankDrive(joy.getRawAxis(1), joy.getRawAxis(5));
 			return;
 		}
 		inputSpeed = joy.getRawAxis(1);
