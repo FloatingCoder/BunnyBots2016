@@ -125,6 +125,10 @@ public class DriveTrain extends Subsystem {
 	public double maxSpeedDuringManualTurn = -0.8f;
 	
 	public void drive(Joystick joy) {
+		if (SmartDashboard.getBoolean("DB/Button 0", false)) {
+			drive.tankDrive(joy.getRawAxis(1), joy.getRawAxis(4));
+			return;
+		}
 		inputSpeed = joy.getRawAxis(1);
 		if (!autoTurnEnabled) {
 		  inputTurn = joy.getRawAxis(4);
