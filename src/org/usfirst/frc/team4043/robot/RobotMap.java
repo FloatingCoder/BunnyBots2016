@@ -27,6 +27,7 @@ public class RobotMap {
 	public static final int rightRangeFinder = 1;
 	public static final int frontRangeFinder = 0;
 
+	//PWM
 	public static final int FlywheelMotor = 1;	
 	public static final int Firingpin = 0;
 	

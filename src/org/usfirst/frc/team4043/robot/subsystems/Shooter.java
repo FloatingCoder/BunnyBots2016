@@ -1,5 +1,7 @@
 package org.usfirst.frc.team4043.robot.subsystems;
 
+import org.usfirst.frc.team4043.robot.RobotMap;
+
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -7,8 +9,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  *
  */
 public class Shooter extends Subsystem {
-    Talon FlywheelMotor = new Talon(1);
-    Talon Firingpin = new Talon(0);
+    Talon FlywheelMotor = new Talon(RobotMap.FlywheelMotor);
+    Talon Firingpin = new Talon(RobotMap.Firingpin);
    
     public void start() {
     	FlywheelMotor.set(0.4f);
