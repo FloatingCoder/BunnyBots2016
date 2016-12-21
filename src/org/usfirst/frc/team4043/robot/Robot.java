@@ -89,14 +89,20 @@ public class Robot extends IterativeRobot {
 		Step = 1;
 		// set the start time
 		TargetTime = System.currentTimeMillis() + Time;
+		String dashData = SmartDashboard.getString("DB/String 0", "myDefaultData");
+		Angle = Integer.parseInt(dashData);
+		drivetrain.gyroSPI.reset();
+
 	}
 
 	/**
 	 * This function is called periodically during autonomous
 	 */
 	public void autonomousPeriodic() {
+
 		if (Step == 1) {
 			System.out.println("step1");
+
 			if (System.currentTimeMillis() < TargetTime) {
 				if (drivetrain.frontRangeFinder.getVoltage() > VoltageLimit) {
 					drivetrain.drive.arcadeDrive(0, 0);
