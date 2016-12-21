@@ -85,6 +85,7 @@ public class Robot extends IterativeRobot {
     private double AngleSpeed = -0.5d;
     private double TargetTime2;
     private double Speed2 = -0.5d;
+    public double gyroAngle = drivetrain.gyroSPI.getAngle();
     public void autonomousInit() {
     //    autonomousCommand = (Command) chooser.getSelected();
        System.out.println("Auto init");
@@ -102,6 +103,8 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
+    	
+    	SmartDashboard.putString("DB/String 5", Double.toString(gyroAngle));
     	
     	if(Step == 1){
             System.out.println("step1");
