@@ -86,6 +86,8 @@ public class Robot extends IterativeRobot {
     private double TargetTime2;
     private double Speed2 = -0.5d;
     public double gyroAngle = drivetrain.gyroSPI.getAngle();
+    private double VoltageLimit = 0.3d;
+
     public void autonomousInit() {
     //    autonomousCommand = (Command) chooser.getSelected();
        System.out.println("Auto init");
@@ -110,7 +112,7 @@ public class Robot extends IterativeRobot {
             System.out.println("step1");
 
     		if(System.currentTimeMillis() < TargetTime){
-    			if (drivetrain.frontRangeFinder.getVoltage() > 0.3d){
+    			if (drivetrain.frontRangeFinder.getVoltage() > VoltageLimit){
     				drivetrain.drive.arcadeDrive(0, 0);
     			}
     			else{	
@@ -134,7 +136,7 @@ public class Robot extends IterativeRobot {
     	}
     	if(Step == 3){
     		if(System.currentTimeMillis() < TargetTime2){
-    			if (drivetrain.frontRangeFinder.getVoltage() > 0.7d){
+    			if (drivetrain.frontRangeFinder.getVoltage() > VoltageLimit){
     				drivetrain.drive.arcadeDrive(0, 0);
     			}
     			else{
