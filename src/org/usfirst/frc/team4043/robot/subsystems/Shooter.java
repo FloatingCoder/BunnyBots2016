@@ -21,7 +21,9 @@ public class Shooter extends Subsystem {
     }
     
     public void push() {
-    	Firingpin.set(0.5f);
+    	if (FlywheelMotor.getSpeed() > 0) {
+    		Firingpin.set(0.5f);
+    	}
     }
     
     public void retract() {
