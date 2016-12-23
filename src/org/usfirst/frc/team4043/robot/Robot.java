@@ -105,6 +105,11 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during autonomous
 	 */
 	public void autonomousPeriodic() {
+		autonomous1();
+
+	}
+
+	public void autonomous1() {
 		gyroAngle = drivetrain.gyroSPI.getAngle();
 		SmartDashboard.putString("DB/String 5", Double.toString(gyroAngle));
 
