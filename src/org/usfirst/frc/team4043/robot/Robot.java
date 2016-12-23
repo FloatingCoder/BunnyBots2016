@@ -89,6 +89,7 @@ public class Robot extends IterativeRobot {
 	private double Speed2 = -0.5d;
 	public double gyroAngle;
 	private double VoltageLimit = 0.3d;
+	public int autoSettingInt = 1;
 
 	public void autonomousInit() {
 		// autonomousCommand = (Command) chooser.getSelected();
@@ -100,7 +101,7 @@ public class Robot extends IterativeRobot {
 		Angle = Integer.parseInt(gyroSetting);
 		drivetrain.gyroSPI.reset();
     	String autoSettingString = SmartDashboard.getString("DB/String 1", "myDefaultData");
-    	public int autoSettingInt = Integer.parseInt(autoSettingString));
+    	autoSettingInt = Integer.parseInt(autoSettingString);
 	}
 
 	/**
