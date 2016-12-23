@@ -94,8 +94,8 @@ public class Robot extends IterativeRobot {
        Step = 1;
         	//set the start time
         	TargetTime = System.currentTimeMillis() + Time;
-        	String dashData = SmartDashboard.getString("DB/String 0", "myDefaultData");
-        	Angle = Integer.parseInt(dashData);
+        	String gyroSetting = SmartDashboard.getString("DB/String 0", "myDefaultData");
+        	Angle = Integer.parseInt(gyroSetting);
         	drivetrain.gyroSPI.reset();
         	
      //   if (autonomousCommand != null) autonomousCommand.start();
