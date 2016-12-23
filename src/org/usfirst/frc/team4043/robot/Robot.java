@@ -84,7 +84,7 @@ public class Robot extends IterativeRobot {
 	private long TargetTime;
 	private double Speed = -0.5d;
 	private double Angle = -90;
-	private double AngleSpeed = -0.5d;
+	private double AngleSpeed = -0.6d;
 	private double TargetTime2;
 	private double Speed2 = -0.5d;
 	public double gyroAngle;
@@ -94,14 +94,24 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		// autonomousCommand = (Command) chooser.getSelected();
 		System.out.println("Auto init");
+	   	String autoSettingString = SmartDashboard.getString("DB/String 1", "myDefaultData");
+   	    autoSettingInt = Integer.parseInt(autoSettingString);
+    	
+    	if (autoSettingInt == 2){
+    		Time = 3000;
+    	}
+		System.out.println("time = " + Time);
+		System.out.println("auti setting " + autoSettingInt);
+
 		Step = 1;
 		// set the start time
 		TargetTime = System.currentTimeMillis() + Time;
 		String gyroSetting = SmartDashboard.getString("DB/String 0", "myDefaultData");
 		Angle = Integer.parseInt(gyroSetting);
 		drivetrain.gyroSPI.reset();
-    	String autoSettingString = SmartDashboard.getString("DB/String 1", "myDefaultData");
-    	autoSettingInt = Integer.parseInt(autoSettingString);
+ 
+ 
+    	
 	}
 
 	/**
@@ -117,11 +127,13 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("DB/String 5", Double.toString(gyroAngle));
 
 		if (Step == 1) {
-			System.out.println("step1");
 
 			if (System.currentTimeMillis() < TargetTime) {
 				if (drivetrain.frontRangeFinder.getVoltage() > VoltageLimit) {
 					drivetrain.drive.arcadeDrive(0, 0);
+					TargetTime2 = System.currentTimeMillis() + Time2;
+					Step = 3;
+					System.out.println("Triggered");
 				} else {
 					drivetrain.drive.arcadeDrive(Speed, 0);
 				}
