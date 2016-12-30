@@ -79,16 +79,16 @@ public class Robot extends IterativeRobot {
 	 */
 	// varible for the start time, time to drive, step
 	private int Step = 1;
-	private int Time = 5000;
+	private int Time = 0;
 	private int Time2 = 10000;
 	private long TargetTime;
 	private double Speed = -0.5d;
-	private double Angle = -90;
+	private double Angle;
 	private double AngleSpeed = -0.6d;
 	private double TargetTime2;
 	private double Speed2 = -0.5d;
 	public double gyroAngle;
-	private double VoltageLimit = 0.3d;
+	private double VoltageLimit = 0.4d;
 	public int autoSettingInt = 1;
 
 	public void autonomousInit() {
@@ -99,6 +99,9 @@ public class Robot extends IterativeRobot {
     	
     	if (autoSettingInt == 2){
     		Time = 3000;
+    	}
+    	else if(autoSettingInt == 1){
+    		Time = 5000;
     	}
 		System.out.println("time = " + Time);
 		System.out.println("auti setting " + autoSettingInt);
@@ -129,30 +132,51 @@ public class Robot extends IterativeRobot {
 		if (Step == 1) {
 
 			if (System.currentTimeMillis() < TargetTime) {
+				if (Math.abs(drivetrain.gyroSPI.getAngle()) > Math.abs(20) ) {
+					Step = 99;
+					System.out.println("AngleStop");
+
+				}
 				if (drivetrain.frontRangeFinder.getVoltage() > VoltageLimit) {
 					drivetrain.drive.arcadeDrive(0, 0);
 					TargetTime2 = System.currentTimeMillis() + Time2;
 					Step = 3;
 					System.out.println("Triggered");
+					System.out.println("Step3");
 				} else {
 					drivetrain.drive.arcadeDrive(Speed, 0);
 				}
 			} else {
 				drivetrain.drive.arcadeDrive(0, 0);
 				Step = 2;
+				System.out.println("Step2");
 			}
 		}
 		if (Step == 2) {
-			if (drivetrain.gyroSPI.getAngle() > Angle) {
+			if (Math.abs(drivetrain.gyroSPI.getAngle()) < Math.abs(Angle)) {
+				if (Angle < 0){
 				drivetrain.drive.arcadeDrive(0, AngleSpeed);
-			} else {
+				}
+				else{
+					drivetrain.drive.arcadeDrive(0, -AngleSpeed);
+				}
+			} else  {
+				if (Math.abs(drivetrain.gyroSPI.getAngle()) > Math.abs(10) ) {
+					Step = 99;
+				}
 				drivetrain.drive.arcadeDrive(0, 0);
 				TargetTime2 = System.currentTimeMillis() + Time2;
 				Step = 3;
+				drivetrain.gyroSPI.reset();
+				System.out.println("Step3");
 			}
 		}
 		if (Step == 3) {
 			if (System.currentTimeMillis() < TargetTime2) {
+				if (Math.abs(drivetrain.gyroSPI.getAngle()) > Math.abs(15) ) {
+					Step = 99;
+					System.out.println("AngleStop2");
+				}
 				if (drivetrain.frontRangeFinder.getVoltage() > VoltageLimit) {
 					drivetrain.drive.arcadeDrive(0, 0);
 				} else {
