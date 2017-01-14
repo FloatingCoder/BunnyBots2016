@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 import org.usfirst.frc.team4043.robot.commands.ExampleCommand;
 import org.usfirst.frc.team4043.robot.commands.FiringPin;
+import org.usfirst.frc.team4043.robot.commands.FlywheelReverse;
 import org.usfirst.frc.team4043.robot.commands.FlywheelStart;
 import org.usfirst.frc.team4043.robot.commands.FlywheelStop;
 
@@ -47,9 +48,10 @@ public class OI {
 	Button shootButton = new JoystickButton(shootStick, 6);
 	Button FlywheelButton = new JoystickButton(shootStick, 5);
 	public OI() {
-		shootButton.whenPressed(new FiringPin());
+		shootButton.whenPressed(new FlywheelReverse());
 		FlywheelButton.whenPressed(new FlywheelStart());
 		FlywheelButton.whenReleased(new FlywheelStop());
+		shootButton.whenReleased(new FlywheelStop());
 	}
 	  
     public Joystick getDriveStick() {

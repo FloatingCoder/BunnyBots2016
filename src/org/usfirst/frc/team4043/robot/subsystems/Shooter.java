@@ -13,7 +13,11 @@ public class Shooter extends Subsystem {
     Talon Firingpin = new Talon(RobotMap.Firingpin);
    
     public void start() {
-    	FlywheelMotor.set(0.4f);
+    	FlywheelMotor.set(0.8f);
+    }
+    
+    public void reverse() {
+    	FlywheelMotor.set(-0.8f);
     }
     
     public void stop() {
