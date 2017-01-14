@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class DriveTrain extends Subsystem {
 
-	private SpeedController left_motor, right_motor;
+	private CANTalon left_motor, right_motor;
 	public RobotDrive drive;
 	//private Encoder left_encoder, right_encoder;
 	private AnalogInput rightRangeFinder;
@@ -35,6 +35,8 @@ public class DriveTrain extends Subsystem {
 		super();
 		left_motor = new CANTalon(RobotMap.leftDrivePort);
 		right_motor = new CANTalon(RobotMap.rightRightPort);
+		left_motor.enableBrakeMode(true);
+		right_motor.enableBrakeMode(true);
 		drive = new RobotDrive(left_motor, right_motor);
 //		left_encoder = new Encoder(1, 2);
 //		right_encoder = new Encoder(3, 4);
