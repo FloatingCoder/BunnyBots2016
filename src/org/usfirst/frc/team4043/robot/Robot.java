@@ -8,6 +8,12 @@ import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+
+import java.io.File;
+import java.io.IOException;
+
+import org.ini4j.Ini;
+import org.ini4j.InvalidFileFormatException;
 import org.usfirst.frc.team4043.robot.commands.ExampleCommand;
 import org.usfirst.frc.team4043.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team4043.robot.subsystems.ExampleSubsystem;
@@ -29,15 +35,32 @@ public class Robot extends IterativeRobot {
 	public static OI oi;
 	public static DriveTrain drivetrain;
 	public static Shooter shooter;
-
+	public static Ini ini;
 	Command autonomousCommand;
 	SendableChooser chooser;
 
+	private static void readSettings() {
+		try {
+			ini = new Ini(new File("/home/lvuser/RoboSettings/roboSettings.ini"));
+			System.out.println("Runtime = " + ini.get("auto", "autoRunTime"));
+
+		} catch (InvalidFileFormatException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void updateDashboardValues() {
+		SmartDashboard.putString("DB/String 5", Double.toString( drivetrain.gyroSPI.getAngle()));
+	}
+	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
-	public void robotInit() {
+	public void robotInit() {	
+		readSettings();
 		shooter = new Shooter();
 
 		oi = new OI();
@@ -52,6 +75,7 @@ public class Robot extends IterativeRobot {
 
 		// server.startAutomaticCapture("cam0");
 	}
+	
 
 	/**
 	 * This function is called once each time the robot enters Disabled mode.
@@ -64,6 +88,7 @@ public class Robot extends IterativeRobot {
 
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
+		updateDashboardValues();
 	}
 
 	/**
@@ -85,13 +110,17 @@ public class Robot extends IterativeRobot {
 	private double Speed = -0.5d;
 	private double Angle;
 	private double AngleSpeed = -0.6d;
+	private double AngleMinSpeed = -.4d;
 	private double TargetTime2;
 	private double Speed2 = -0.5d;
 	public double gyroAngle;
 	private double VoltageLimit = 0.4d;
 	public int autoSettingInt = 1;
 
+	private int targetAngle;
+
 	public void autonomousInit() {
+		readSettings();
 		// autonomousCommand = (Command) chooser.getSelected();
 		System.out.println("Auto init");
 	   	String autoSettingString = SmartDashboard.getString("DB/String 1", "myDefaultData");
@@ -112,17 +141,86 @@ public class Robot extends IterativeRobot {
 		String gyroSetting = SmartDashboard.getString("DB/String 0", "myDefaultData");
 		Angle = Integer.parseInt(gyroSetting);
 		drivetrain.gyroSPI.reset();
- 
- 
-    	
+		
+		targetAngle = Integer.parseInt(ini.get("auto", "turnAngle"));
+		AngleSpeed = Double.parseDouble(ini.get("auto", "AngleSpeed"));
+		AngleMinSpeed = Double.parseDouble(ini.get("auto", "AngleMinSpeed"));
 	}
 
 	/**
 	 * This function is called periodically during autonomous
 	 */
 	public void autonomousPeriodic() {
-		autonomous1();
-
+		updateDashboardValues();
+		//autonomous1();
+		auto3();
+	}
+	
+	public void auto2() {
+		gyroAngle = drivetrain.gyroSPI.getAngle();
+		if (Step == 1) {
+			if (Math.abs(gyroAngle) < Math.abs(targetAngle)) {
+				if (targetAngle < 0){
+				    drivetrain.drive.arcadeDrive(0, AngleSpeed);
+				}
+				else{
+					drivetrain.drive.arcadeDrive(0, -AngleSpeed);
+				}
+			} else {
+				drivetrain.drive.arcadeDrive(0, 0);
+				Step = 2;
+				System.out.println("Step2");
+			}
+		}
+		if (Step == 2) {
+				if (targetAngle < 0){
+					if (gyroAngle < 0) {
+						drivetrain.drive.arcadeDrive(0, -AngleSpeed);
+					} else {
+						drivetrain.drive.arcadeDrive(0, 0);
+						Step = 1;
+					}
+				}
+				else{
+					if (gyroAngle > 0) {
+						drivetrain.drive.arcadeDrive(0, -AngleSpeed);
+					} else {
+						drivetrain.drive.arcadeDrive(0, 0);
+						Step = 1;
+					}
+				}
+		
+		}
+	}
+	
+	public void auto3() {
+		gyroAngle = drivetrain.gyroSPI.getAngle();
+		if (gyroAngle > targetAngle + 1.5){
+			drivetrain.drive.arcadeDrive(0, findAngleSpeed(gyroAngle));
+		}
+		if (gyroAngle < targetAngle -1.5){
+			drivetrain.drive.arcadeDrive(0, findAngleSpeed(gyroAngle));
+		}
+	}
+	
+	double figuredSpeed = 0;
+	public double findAngleSpeed(double gyroAngle) {
+		if (gyroAngle < targetAngle + 10 && gyroAngle > targetAngle){
+			return AngleMinSpeed;
+		}
+		if (gyroAngle > targetAngle -10 && gyroAngle < targetAngle){
+			return -AngleMinSpeed;
+		}
+		figuredSpeed = (gyroAngle - targetAngle) * AngleSpeed;
+		if (Math.abs(figuredSpeed) > Math.abs(AngleSpeed)) {
+			if (figuredSpeed > 0) {
+				return -AngleSpeed;
+			} else {
+				return AngleSpeed;
+			}
+		} else {
+			return figuredSpeed;
+		}		
 	}
 
 	public void autonomous1() {
@@ -193,6 +291,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopInit() {
+		readSettings();
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
@@ -202,10 +301,12 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopPeriodic() {
+		updateDashboardValues();
 		Scheduler.getInstance().run();
 	}
 
 	public void testPeriodic() {
+		updateDashboardValues();
 		LiveWindow.run();
 	}
 }
